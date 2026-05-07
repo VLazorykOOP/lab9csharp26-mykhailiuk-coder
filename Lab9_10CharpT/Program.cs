@@ -143,9 +143,50 @@ public class Lab9T3
             if (ch == '#') { if (list.Count > 0) list.RemoveAt(list.Count - 1); }
             else { list.Add(ch); }
         }
+        Console.WriteLine($"Вхідний рядок: {input}");
         Console.Write("Результат Backspace: ");
         foreach (var item in list) Console.Write(item);
         Console.WriteLine();
+
+            string filePath = @"D:\cs_tasks\lab9\lab9csharp26-mykhailiuk-coder\Lab9_10CharpT\performance.txt";
+            ArrayList highAchievers = new ArrayList();
+            ArrayList others = new ArrayList();
+            try
+            {
+                if (!File.Exists(filePath))
+                {
+                    Console.WriteLine("Файл не знайдено!");
+                    return;
+                }
+                string[] lines = File.ReadAllLines(filePath);
+                foreach (string line in lines)
+                {
+                    string[] parts = line.Split(';');
+                    if (parts.Length != 3)
+                        continue;
+                    Student student = new Student
+                    {
+                        FullName = parts[0].Trim(),
+                        Group = parts[1].Trim(),
+                        Grades = parts[2]
+                            .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                            .Select(int.Parse)
+                            .ToArray()
+                    };
+                    if (student.IsSuccessful)
+                        highAchievers.Add(student);
+                    else
+                        others.Add(student);
+                }
+                Console.WriteLine("\nСтуденти, що навчаються на 4 і 5:");
+                foreach (Student student in highAchievers) Console.WriteLine(student);
+                Console.WriteLine("\nІнші студенти:");
+                foreach (Student student in others) Console.WriteLine(student);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Помилка: {ex.Message}");
+        }
     }
 }
 

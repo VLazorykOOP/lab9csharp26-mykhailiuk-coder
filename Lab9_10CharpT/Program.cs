@@ -3,11 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 public class Lab9T1
 {
     public void Run()
     {
+        Console.OutputEncoding = Encoding.UTF8;
+        Console.InputEncoding = Encoding.UTF8;
         Console.WriteLine("--- Завдання 1 (Stack) ---");
         string input = "abc#d##c";
         string result = ProcessBackspace(input);
@@ -49,6 +52,8 @@ public class Lab9T2
 {
     public void Run()
     {
+        Console.OutputEncoding = Encoding.UTF8;
+        Console.InputEncoding = Encoding.UTF8;
         Console.WriteLine("\n--- Завдання 2 (Queue) ---");
         // Симуляція читання з файлу (створення тестових даних)
         List<Student> students = new List<Student>
@@ -80,6 +85,8 @@ public class Lab9T3
 {
     public void Run()
     {
+        Console.OutputEncoding = Encoding.UTF8;
+        Console.InputEncoding = Encoding.UTF8;
         Console.WriteLine("\n--- Завдання 3 (ArrayList) ---");
 
         // Переробка Завдання 1
@@ -102,6 +109,8 @@ public class Lab9T4
 
     public void Run()
     {
+        Console.OutputEncoding = Encoding.UTF8;
+        Console.InputEncoding = Encoding.UTF8;
         Console.WriteLine("\n--- Завдання 4 (Hashtable) ---");
         AddDisk("The Wall", "Pink Floyd");
         AddSong("The Wall", "Another Brick in the Wall");
@@ -156,6 +165,9 @@ class Program
 
         Lab9T2 task2 = new Lab9T2();
         task2.Run();
+
+        Lab9T3 task3 = new Lab9T3();
+        task3.Run();
 
         Lab9T4 task4 = new Lab9T4();
         task4.Run();

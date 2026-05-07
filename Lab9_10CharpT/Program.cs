@@ -43,9 +43,20 @@ public class Student
     public string FullName { get; set; }
     public string Group { get; set; }
     public int[] Grades { get; set; }
-    public bool IsSuccessful => Grades.All(g => g >= 4);
 
-    public override string ToString() => $"{FullName} (Група: {Group}), Оцінки: {string.Join(", ", Grades)}";
+    // студент успішний, якщо всі оцінки 4 або 5
+    public bool IsSuccessful
+    {
+        get
+        {
+            return Grades.All(g => g >= 4);
+        }
+    }
+
+    public override string ToString()
+    {
+        return $"{FullName} | Група: {Group} | Оцінки: {string.Join(", ", Grades)}";
+    }
 }
 
 public class Lab9T2
@@ -54,30 +65,66 @@ public class Lab9T2
     {
         Console.OutputEncoding = Encoding.UTF8;
         Console.InputEncoding = Encoding.UTF8;
-        Console.WriteLine("\n--- Завдання 2 (Queue) ---");
-        // Симуляція читання з файлу (створення тестових даних)
-        List<Student> students = new List<Student>
-        {
-            new Student { FullName = "Іванов І.І.", Group = "КН-1", Grades = new[] { 5, 4, 5 } },
-            new Student { FullName = "Петров П.П.", Group = "КН-2", Grades = new[] { 3, 4, 5 } },
-            new Student { FullName = "Сидоров С.С.", Group = "КН-1", Grades = new[] { 5, 5, 5 } },
-            new Student { FullName = "Коваленко О.О.", Group = "КН-2", Grades = new[] { 2, 3, 4 } }
-        };
+
+        Console.WriteLine("\n--- Завдання 2 (Queue + файл) ---");
+
+        string filePath =
+            @"D:\cs_tasks\lab9\lab9csharp26-mykhailiuk-coder\Lab9_10CharpT\performance.txt";
 
         Queue<Student> highAchievers = new Queue<Student>();
         Queue<Student> others = new Queue<Student>();
 
-        foreach (var s in students)
+        try
         {
-            if (s.IsSuccessful) highAchievers.Enqueue(s);
-            else others.Enqueue(s);
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine("Файл не знайдено!");
+                return;
+            }
+
+            string[] lines = File.ReadAllLines(filePath);
+
+            foreach (string line in lines)
+            {
+                string[] parts = line.Split(';');
+
+                if (parts.Length != 3)
+                    continue;
+
+                Student student = new Student
+                {
+                    FullName = parts[0].Trim(),
+                    Group = parts[1].Trim(),
+                    Grades = parts[2]
+                        .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                        .Select(int.Parse)
+                        .ToArray()
+                };
+
+                if (student.IsSuccessful)
+                    highAchievers.Enqueue(student);
+                else
+                    others.Enqueue(student);
+            }
+
+            Console.WriteLine("\nСтуденти, що навчаються на 4 і 5:");
+
+            while (highAchievers.Count > 0)
+            {
+                Console.WriteLine(highAchievers.Dequeue());
+            }
+
+            Console.WriteLine("\nІнші студенти:");
+
+            while (others.Count > 0)
+            {
+                Console.WriteLine(others.Dequeue());
+            }
         }
-
-        Console.WriteLine("Успішні студенти (4-5):");
-        while (highAchievers.Count > 0) Console.WriteLine(highAchievers.Dequeue());
-
-        Console.WriteLine("\nІнші студенти:");
-        while (others.Count > 0) Console.WriteLine(others.Dequeue());
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Помилка: {ex.Message}");
+        }
     }
 }
 
@@ -89,7 +136,6 @@ public class Lab9T3
         Console.InputEncoding = Encoding.UTF8;
         Console.WriteLine("\n--- Завдання 3 (ArrayList) ---");
 
-        // Переробка Завдання 1
         string input = "abc#d##c";
         ArrayList list = new ArrayList();
         foreach (char ch in input)
@@ -123,7 +169,7 @@ public class Lab9T4
         SearchArtist("Pink Floyd");
     }
 
-    public void AddDisk(string title, string artist) => catalog[title] = new List<string> { artist }; // Перший елемент - виконавець
+    public void AddDisk(string title, string artist) => catalog[title] = new List<string> { artist }; 
 
     public void AddSong(string diskTitle, string song)
     {
@@ -160,16 +206,36 @@ class Program
 {
     static void Main(string[] args)
     {
-        Lab9T1 task1 = new Lab9T1();
-        task1.Run();
-
-        Lab9T2 task2 = new Lab9T2();
-        task2.Run();
-
-        Lab9T3 task3 = new Lab9T3();
-        task3.Run();
-
-        Lab9T4 task4 = new Lab9T4();
-        task4.Run();
+        while (true)
+        {
+            Console.OutputEncoding = Encoding.UTF8;
+            Console.InputEncoding = Encoding.UTF8;
+            Console.WriteLine("Виберіть завдання (1-4) або 0 для виходу:");
+            string choice = Console.ReadLine()!;
+            if (choice == "0") break;
+            switch (choice)
+            {
+                case "1":
+                    Lab9T1 task1 = new Lab9T1();
+                    task1.Run();
+                    break;
+                case "2":
+                    Lab9T2 task2 = new Lab9T2();
+                    task2.Run();
+                    break;
+                case "3":
+                    Lab9T3 task3 = new Lab9T3();
+                    task3.Run();
+                    break;
+                case "4":
+                    Lab9T4 task4 = new Lab9T4();
+                    task4.Run();
+                    break;
+                default:
+                    Console.WriteLine("Невірний вибір. Спробуйте ще раз.");
+                    break;
+            }
+            Console.WriteLine();
+        }
     }
 }
